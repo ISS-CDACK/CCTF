@@ -1,0 +1,152 @@
+
+body {background: #000;}
+canvas {display: block;
+    position:fixed;
+   left:0;
+   top:0;
+   z-index:-1;
+}
+
+.last-update{ 
+  position: relative;     
+  bottom: 0px; 
+  width: 100%;
+  color: #bebebe;
+  font-size: 14.8px;
+    /* font-weight: bold; */
+  /* padding-top: 2%; */
+}
+
+
+.center {
+  text-align: center;
+  margin: auto;
+  width: 29%;
+  color: #ffffff;
+  border: solid green;
+  padding: 2px;
+}
+
+
+.leaderboard {
+  text-align: center;
+  padding-left: 2.2em;
+  /* padding-top: 4em; */
+  display: flex;
+  flex-direction: column; }
+  .leaderboard h3 {
+    text-decoration: none;
+    display: block;
+    margin: 15px 15px 15px 15px;
+    padding: 0 0 0 5px;
+    color: #111615;
+    font-weight: normal;
+    font-size: 1.2em; }
+    .leaderboard h3:after {
+      display: block;
+      margin: 10px 0 0px 0;
+      content: '';
+      width: 30px;
+      height: 3px;
+      background-color: #099e10; }
+  .leaderboard table {
+    background-color: white;
+    width: 95%;
+    margin: 10px 15px 15px 15px;
+    border-radius: 7px;
+    border: 1px solid #eeeeee;
+    border-collapse: collapse;
+    -webkit-box-shadow: 0px 2px 10x -5px rgba(0, 0, 0, 0.45);
+    -moz-box-shadow: 0px 2px 10px -5px rgba(0, 0, 0, 0.45);
+    box-shadow: 0px 2px 10px -5px rgba(0, 0, 0, 0.45); }
+    .leaderboard table thead {
+      border-bottom: 1px solid #eeeeee; }
+      .leaderboard table thead tr th {
+        padding: 15px; }
+      .leaderboard table thead tr td {
+        text-align: center; }
+    .leaderboard table tbody tr:nth-child(odd) {
+      background: #ffffff;
+      color: black; }
+    .leaderboard table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+      color: black; }
+    .leaderboard table tbody tr:nth-child(1) {
+      background-color: green;
+      color: white; }
+    .leaderboard table tbody tr:nth-child(2) {
+      background-color: #3bb83b; }
+    .leaderboard table tbody tr:nth-child(3) {
+      background-color: #90e490; }
+    .leaderboard table tbody tr:hover {
+      background-color: #e0e0e0; }
+    .leaderboard table tbody tr td {
+      text-align: center;
+      padding: 10px; }
+
+.dash-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  background-color: #eeeeee;
+  overflow: auto; }
+
+
+.dash-content {
+  position: relative;
+  margin-left: 300px;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  width: auto;
+  height: 100vh; }
+  .dash-content .dash-nav {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #099e10;
+    width: 100%;
+    z-index: 99;
+    -webkit-box-shadow: 0px 0px 30px -6px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 30px -6px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 30px -6px rgba(0, 0, 0, 0.75); }
+    .dash-content .dash-nav .tabs {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      color: #c9c9c9; }
+      .dash-content .dash-nav .tabs ul {
+        list-style: none;
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        padding: 0;
+        margin: 0; }
+        .dash-content .dash-nav .tabs ul li {
+          display: flex; }
+          .dash-content .dash-nav .tabs ul li a {
+            color: #e0e0e0;
+            font-size: 1.1em;
+            text-decoration: none;
+            padding: 25px 25px 25px 25px; }
+            .dash-content .dash-nav .tabs ul li a:hover {
+              background-color: rgba(0, 0, 0, 0.2);
+              color: white; }
+            .dash-content .dash-nav .tabs ul li a:active {
+              background-color: rgba(0, 0, 0, 0.2);
+              color: white; }
+          .dash-content .dash-nav .tabs ul li .active {
+            color: white;
+            border-bottom: 2px solid #ffffff; }
+    .dash-content .dash-nav .logout {
+      display: inline-block;
+      align-self: center;
+      justify-self: flex-end;
+      margin: 0 20px 0 auto;
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 1.1em; }
+  .dash-content .dash-challenge-container {
+    display: flex;
+    flex-direction: column; }
