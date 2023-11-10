@@ -11,7 +11,7 @@ Classic CTF activities include reverse-engineering, packet sniffing, protocol an
 
 # Requirements
 
-In order to host the CTF properly in a web server the following requirements should be satisfied.
+In order to host the CCTF properly in a web server the following requirements should be satisfied.
 
 ## Software requirements
 
