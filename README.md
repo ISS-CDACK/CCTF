@@ -266,4 +266,3 @@ The following links can be useful.
 
 [https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-ubuntu-20-04](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-ubuntu-20-04)
 
-[Table of Contents](#_Table_of_Contents) Page 15 of 15
