@@ -1,0 +1,8 @@
+SetEnv ID Asia/Kolkata
+
+RewriteEngine on 
+RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost/ [NC] 
+RewriteRule \.(txt)$ - [F,NC]
+
+ErrorDocument 404 /error.html
+ErrorDocument 403 /error.html
