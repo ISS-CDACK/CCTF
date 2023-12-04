@@ -1,5 +1,33 @@
 # CCTF MANUAL
 
+## Tables of Content
+- [Introduction](#introduction)
+- [Requirements](#requirements)
+  - [Software requirements](#software-requirements)
+  - [Hardware requirements](#hardware-requirements)
+- [Usage](#usage)
+  - [As an admin](#as-an-admin)
+    - [Dashboard](#dashboard)
+    - [Leaderboard](#leaderboard)
+    - [Challenges](#challenges)
+    - [Categories](#categories)
+    - [Visitors](#visitors)
+    - [Sudo Zone](#sudo-zone)
+  - [As an User](#as-an-user)
+    - [Registration](#registration)
+    - [Login](#login)
+    - [Challenges](#challenges-1)
+    - [Leaderboard](#leaderboard-1)
+    - [Settings](#settings)
+    - [Contact Us](#contact-us)
+    - [Forgot Password](#forgot-password)
+- [Installation](#installation)
+  - [Linux](#linux)
+    - [Auto Installation (Debian/Ubuntu)](#auto-installation-debianubuntu)
+    - [Manual Installation Guide](#manual-installation-guide)
+- [Extra Information](#extra-information)
+- [Appendix](#appendix)
+
 
 # Introduction
 
@@ -50,7 +78,6 @@ After log in you can view the **Dashboard** page. In **Dashboard** page you can 
 
 ![image-4](https://github.com/ISS-CDACK/CCTF/assets/149384071/debf5ef8-2ba9-44f1-a192-2c57bb05f343)
 
-###
 
 ### Leaderboard
 
@@ -166,6 +193,133 @@ You can send us a message using the **Contact Us** page.
 If somehow you forget your password you need to click on the Forgot password option in the login page and contact the admin and wait till the admin has given the one-time secret key from his/her end. Then you need to enter the email-ID and the secret-key provided by admin and click submit button. After that you can easily reset your password and login.
 
 ![image-21](https://github.com/ISS-CDACK/CCTF/assets/149384071/ee882102-bbd6-4939-978b-adffa6d60fbe)
+
+
+# Installation 
+## Linux
+### Auto Installation (Debian/Ubuntu)
+1. Enter the command to download `install.sh`
+```
+wget https://raw.githubusercontent.com/ISS-CDACK/CCTF/main/install.sh
+```
+2. Open the `install.sh` in a text editor and modify mysql_root_password, phpmyadmin_db_password, phpmyadmin_instance_username, phpmyadmin_instance_password, code_username, code_user_pass, admin_username, admin_password, secure_host, ctf_db_name, and port_number variables according to your needs
+3. Make `install.sh` executable
+```
+sudo chmod +x install.sh
+```
+4. Run the script
+```
+sudo ./install.sh
+```
+5. Installation Complete🎉🎉
+
+### Manual Installation Guide
+1. Check for Root User
+
+Ensure that you are logged in as the root user or have sudo privileges.
+
+```bash
+whoami
+```
+2. Install Required Software
+Update the package lists and install Git, Apache2, MariaDB, and PHP.
+```bash
+sudo apt update
+sudo apt install git apache2 mariadb-server mariadb-client php php-common php-mysql php-gmp php-curl php-intl php-mbstring php-xmlrpc php-gd php-xml php-cli php-zip -y
+```
+3. Configure MySQL
+Secure the MySQL installation with the provided root password.
+```bash
+sudo mysql_secure_installation
+```
+4. Install phpMyAdmin
+Install and configure phpMyAdmin.
+```bash
+sudo apt install -y phpmyadmin
+```
+Edit /etc/apache2/conf-available/phpmyadmin.conf to include AllowOverride All within the <Directory /usr/share/phpmyadmin> block.
+5. Create phpMyAdmin Authentication
+Create .htaccess and .htpasswd files for phpMyAdmin authentication.
+```bash
+sudo nano /usr/share/phpmyadmin/.htaccess
+```
+Add the following content:
+```bash
+AuthType Basic
+AuthName "Restricted Files"
+AuthUserFile /etc/phpmyadmin/.htpasswd
+Require valid-user
+```
+Create a user
+```bash
+sudo htpasswd -bc /etc/phpmyadmin/.htpasswd <username> 
+```
+Replace <username> with the desired username.
+6. Change phpMyAdmin Port
+Create a new Apache Virtual Host configuration file for phpMyAdmin with the desired port number.
+```bash
+sudo nano /etc/apache2/sites-available/phpmyadmin.conf
+```
+Add the following content:
+```bash
+Listen <port_number>
+
+<VirtualHost *:<port_number>>
+    ServerName localhost
+    DocumentRoot /usr/share/phpmyadmin
+
+    <Directory /usr/share/phpmyadmin>
+        Options Indexes FollowSymLinks
+        DirectoryIndex index.php
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    Include /etc/phpmyadmin/apache.conf
+
+    ErrorLog ${APACHE_LOG_DIR}/phpmyadmin.error.log
+    CustomLog ${APACHE_LOG_DIR}/phpmyadmin.access.log combined
+</VirtualHost>
+```
+Replace <port_number> with the desired port number.
+8. Enable and Reload Apache
+Enable the new phpMyAdmin site and reload Apache.
+```bash
+sudo a2ensite phpmyadmin.conf
+sudo systemctl reload apache2
+```
+9. Configure MySQL Database
+Log in to MySQL and create a database for CTF, add users, and change the root password.
+```bash
+sudo mysql -u root -p
+```
+```bash
+CREATE DATABASE `CDAC-K_CTF` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+GRANT ALL ON `CDAC-K_CTF`.* TO '<admin_username>'@'<secure_host>' IDENTIFIED BY '<admin_password>';
+GRANT SELECT, INSERT, UPDATE ON `CDAC-K_CTF`.* TO '<code_username>'@'localhost' IDENTIFIED BY '<code_user_pass>';
+ALTER USER 'root'@'localhost' IDENTIFIED BY '<mysql_root_password>';
+FLUSH PRIVILEGES;
+```
+10.  Clone and Configure CTF Application
+Clone the CTF repository and configure the config.php file.
+```bash
+git clone https://github.com/ISS-CDACK/CCTF.git
+sudo cp -r CCTF/. /var/www/html/
+sudo rm -rf CCTF/
+```
+Edit /var/www/html/CCTF/config.php to update database credentials.
+11. Finalize Apache Configuration
+Enable mod_rewrite and restart Apache.
+```bash
+sudo a2enmod rewrite
+sudo service apache2 restart
+```
+12. Set Permissions
+```bash
+sudo chmod 644 /etc/phpmyadmin/.htaccess /etc/phpmyadmin/.htpasswd
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R g+w /var/www/html
+```
 
 # Extra Information
 
