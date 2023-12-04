@@ -1,7 +1,7 @@
 <?php
     $servername = "localhost";
-    $username = "ctf_USER";
-    $password = "CTF_Cd@c_Kol_4321";
+    $username = "ctf_code_USER";
+    $password = "ctf";
     $database = "CDAC-K_CTF";
     $debug_mode = false;
     // Create connection
