@@ -132,7 +132,7 @@ sudo systemctl stop mariadb.service && sudo systemctl start mariadb.service && s
 echo -e "\nY\n\n${mysql_root_password}\n${mysql_root_password}\n\n\nn\n\n " | mysql_secure_installation
 
 # Install PHP
-sudo apt install php php-common php-mysql php-gmp php-curl php-intl php-mbstring php-xmlrpc php-gd php-xml php-cli php-zip -y
+sudo apt install php php-ldap php-common php-mysql php-gmp php-curl php-intl php-mbstring php-xmlrpc php-gd php-xml php-cli php-zip  -y
 
 # Set debconf selections to automatically configure phpmyadmin with apache2
 echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | sudo debconf-set-selections
