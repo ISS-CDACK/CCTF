@@ -1,4 +1,4 @@
-<?php 
+<?php
 include 'admin_session.php';
 include 'config.php';
 
@@ -17,7 +17,7 @@ if (isset($_GET["p"]) && $_GET["p"] == $LEADERBOARD) {
     $current_page = $CHALLENGES;
 }else if (isset($_GET["p"]) && $_GET["p"] == $VISITORS){
     $current_page = $VISITORS;
-} else if (isset($_GET["p"]) && $_GET["p"] == $SETTINGS){
+} else if (isset($_GET["p"]) && $_GET["p"] == $SETTINGS && (!$ldap_connection)){
     $current_page = $SETTINGS;
 } else if (isset($_GET["p"]) && $_GET["p"] == $DASHBOARD){
     $current_page = $DASHBOARD;
@@ -37,7 +37,7 @@ if (isset($_GET["p"]) && $_GET["p"] == $LEADERBOARD) {
     <div class="admin-nav">
         <div class="nav">
             <ul>
-                <?php 
+                <?php
                     if($current_page == $DASHBOARD){
                         echo "<li><a href='?p=dashboard' class='active'>DashBoard</a></li>
                         <li><a href='?p=leaderboard' >LeaderBoard</a></li>
@@ -79,7 +79,7 @@ if (isset($_GET["p"]) && $_GET["p"] == $LEADERBOARD) {
             <a href="logout.php" class="logout">Logout</a>
         </div>
     </div>
-    <?php 
+    <?php
         if($current_page == $DASHBOARD){
             include 'admin/dashboard.php';
         } else if ($current_page == $LEADERBOARD) {

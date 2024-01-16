@@ -1,4 +1,4 @@
 <?php
-$ctf_start_time = 1664166900;
-$ctf_end_time = 1664170200;
+$ctf_start_time = 1704943800;
+$ctf_end_time = 1705062300;
 ?>

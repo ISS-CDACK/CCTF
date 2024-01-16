@@ -1,4 +1,4 @@
-<?php 
+<?php
 include '../admin_session.php';
 include '../config.php';
 
@@ -32,18 +32,22 @@ if (isset($_GET["p"]) && $_GET["p"] == $keypage) {
             <ul>
                 <?php
                     if($current_page == $keypage){
-                        echo "<li><a href='?p=keypage' class='active'>Key Generate</a></li>
-                        <li><a href='?p=permission' >Permission</a></li>
-                        <li><a href='?p=setting' >Settings</a></li>";
+                        echo "<li><a href='?p=keypage' class='active'>Key Generate</a></li>";
+                        echo "<li><a href='?p=permission' >Permission</a></li>";
+                        if (!$ldap_connection){
+                            echo "<li><a href='?p=settings' >Settings</a></li>";
+                        }
                     } else if ($current_page == $permission) {
-                        echo "<li><a href='?p=keypage' >Key Generate</a></li>
-                        <li><a href='?p=permission' class='active' >Permission</a></li>
-                        <li><a href='?p=setting' >Settings</a></li>";
+                        echo "<li><a href='?p=keypage'>Key Generate</a></li>";
+                        echo "<li><a href='?p=permission' class='active' >Permission</a></li>";
+                        if (!$ldap_connection){
+                            echo "<li><a href='?p=settings' >Settings</a></li>";
+                        }
                     }
                     else if ($current_page == $setting) {
-                        echo "<li><a href='?p=keypage' >Key Generate</a></li>
-                        <li><a href='?p=permission' >Permission</a></li>
-                        <li><a href='?p=setting' class='active'>Settings</a></li>";
+                        echo "<li><a href='?p=keypage'>Key Generate</a></li>";
+                        echo "<li><a href='?p=permission'>Permission</a></li>";
+                        echo "<li><a href='?p=settings' >Settings</a></li>";
                     }
                     ?>
                     <li><a href='/admin.php'>Home</a></li>
@@ -51,13 +55,13 @@ if (isset($_GET["p"]) && $_GET["p"] == $keypage) {
             </ul>
             <a href="../logout.php" class="logout">Logout</a>
         </div>
-    </div> 
+    </div>
     <?php
         if($current_page == $keypage){
             include 'keytable.php';
         } else if ($current_page == $permission) {
             include 'permissions.php';
-        }else if ($current_page == $setting) {
+        }else if ($current_page == $setting && !$ldap_connection) {
            include 'settings.php';
         }
     ?>
@@ -68,9 +72,9 @@ setInterval("yourAjaxCall()",10000);
 function yourAjaxCall(){
     $.ajax({    //create an ajax request to display.php
         type: "GET",
-        url: "../get_user_state.php",             
-        dataType: "html",   //expect html to be returned                
-        success: function(response){  
+        url: "../get_user_state.php",
+        dataType: "html",   //expect html to be returned
+        success: function(response){
             // $("#responsecontainer").html(response);
             text = response;
             string = text.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, "")
@@ -88,7 +92,7 @@ function yourAjaxCall(){
                 alert('You are banned from the CTF. Please contact ADMIN');
                 window.location.replace("/logout.php");
                 $(document).ajaxStop();
-            }              
+            }
         }
     });
 }

@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
 	<meta charset="UTF-8">
-	<title>CCTF</title>
+	<title>CDAC CTF</title>
 	<link rel="icon" href="/images/flag.png">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/style_Score.css" />
 

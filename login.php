@@ -4,6 +4,11 @@
         setcookie('key', '', time() - 3600, '/password_reset'); // empty value and old timestamp
     }
     include 'config.php';
+    if ($ldap_connection){
+        header("Location: /login_ldap.php", true, 302);
+        header("Connection: close");
+        exit;
+    }
     require './includes/sanitizer.php';
     session_start();
 
@@ -30,7 +35,7 @@
 
         try{
             $sql = "SELECT password FROM users WHERE email = ?";
-            $stmt = $conn->prepare($sql); 
+            $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $myEmail);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -51,7 +56,7 @@
             if (password_verify($myPassword, $pass)) {
                 try{
                     $sql = "SELECT * FROM users WHERE email = ?";
-                    $stmt = $conn->prepare($sql); 
+                    $stmt = $conn->prepare($sql);
                     $stmt->bind_param("s", $myEmail);
                     $stmt->execute();
                     $result = $stmt->get_result();
@@ -74,7 +79,6 @@
                         $_SESSION['role'] = $row['role'];
                         $_SESSION['id'] = $row['id'];
                         $_SESSION['name'] = $row['name'];
-                        // $_SESSION[''] = $row['name'];
                         if ($row['role'] == 'user') {
                             $current_ts =  time().'+cdac_ctf_timestmap_hash';
                             $ts_hash =  hash('crc32b', $current_ts);
@@ -84,15 +88,15 @@
                             // if (!$conn) {
                             //     die('Could not connect: ' . mysqli_error());
                             // }
-            
+
                             // $result = mysqli_query($conn, $sql);
-            
+
                             // if (!$result) {
                             //     die('Could not get data: '.$sql. mysqli_error());
                             // }
                             try{
                                 $sql = "INSERT INTO login_logs (users_id, time_stamp, ts_hash) VALUES (?, CURRENT_TIMESTAMP(), ?) ON DUPLICATE KEY UPDATE time_stamp=CURRENT_TIMESTAMP(), ts_hash=?";
-                                $stmt = $conn->prepare($sql); 
+                                $stmt = $conn->prepare($sql);
                                 $stmt->bind_param("sss", $u_id, $ts_hash, $ts_hash);
                                 $stmt->execute();
                                 $result = $stmt->get_result();
@@ -119,7 +123,7 @@
 
                             try{
                                 $sql = "INSERT INTO login_logs (users_id, time_stamp, ts_hash) VALUES (?, CURRENT_TIMESTAMP(), ?) ON DUPLICATE KEY UPDATE time_stamp=CURRENT_TIMESTAMP(), ts_hash=?";
-                                $stmt = $conn->prepare($sql); 
+                                $stmt = $conn->prepare($sql);
                                 $stmt->bind_param("sss", $u_id, $ts_hash, $ts_hash);
                                 $stmt->execute();
                                 $result = $stmt->get_result();
@@ -162,7 +166,7 @@
             header('Location: success.php?p=login_failed');
             die();
         }
-    } 
+    }
     elseif ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create-account']) ) {
         // die('test here');
         $name = sanitizeInput($_POST['name']);
@@ -187,7 +191,7 @@
 
         try{
             $sql = "SELECT email FROM users WHERE email = ?";
-            $stmt = $conn->prepare($sql); 
+            $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -212,8 +216,8 @@
             // ($result = mysqli_query($conn, $sql)) or die(mysqli_error($conn));
             try{
                 $sql = "INSERT INTO users(name, email, password) VALUES (?, ?, ?)";
-                $stmt = $conn->prepare($sql); 
-                $stmt->bind_param("sss", 
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("sss",
                 $name, $email, $hashed_Password);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -227,14 +231,14 @@
                     die();
                 }
             }
-            
+
             header('Location: success.php?p=new_account');
             die();
         }
     }
-    // elseif ( $_SERVER['REQUEST_METHOD'] == 'POST'){ 
+    // elseif ( $_SERVER['REQUEST_METHOD'] == 'POST'){
     // die(print_r($_POST));}
-        
+
     $LOGIN = 'login';
     $SIGNUP = 'signup';
     $current_page = null; //redirect to login page //set the current page to login or sign up based on the param
@@ -281,7 +285,7 @@
     }
 
     @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
+    from {bottom: 0; opacity: 0;}
     to {bottom: 30px; opacity: 1;}
     }
 
@@ -291,7 +295,7 @@
     }
 
     @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;} 
+    from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
     }
 
@@ -311,7 +315,7 @@
                 </h1>
             </div>
         </nav>
-        
+
         <div class="main-container">
             <div class="login-card">
                 <div class="tabs">

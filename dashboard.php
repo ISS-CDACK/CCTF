@@ -1,40 +1,15 @@
-<?php 
+<?php
     include 'session.php';
 ?>
 <!DOCTYPE html>
 <html>
 
-<?php 
+<?php
 include 'includes/header.php';
 include 'includes/comp_time.php';
-// require './includes/sanitizer.php';
-
-
-// $response = file_get_contents('./files/BTS.jpg');
-    
-// HTTP requires "\r\n" In HTTP, lines have to be terminated with "\r\n" because of
-    // $request = "GET / HTTP/1.1\r\n";
-    // $request .= "Host: www.example.com\r\n";
-    // $request .= "\r\n"; // We need to add a last new line after the last header
-
-    // We open a connection to www.example.com on the port 80
-    // $connection = fsockopen('./files/BTS.jpg');
-
-    // The information stream can flow, and we can write and read from it
-    // fwrite($connection, $request);
-
-    // As long as the server returns something to us...
-    // while(!feof($connection)) {
-    //     // ... print what the server sent us
-    //     echo fgets($connection);
-    // }
-
-    // // Finally, close the connection
-    // fclose($connection);
-
 
 ?>
-<?php 
+<?php
     $CHALLENGES = "challenges";
     $LEADERBOARD = "leaderboard";
     $SETTINGS = "settings";
@@ -45,7 +20,7 @@ include 'includes/comp_time.php';
         $current_page = $LEADERBOARD;
     } else if (isset($_GET["p"]) && $_GET["p"] == $CHALLENGES){
         $current_page = $CHALLENGES;
-    } else if (isset($_GET["p"]) && $_GET["p"] == $SETTINGS){
+    } else if (isset($_GET["p"]) && $_GET["p"] == $SETTINGS && (!$ldap_connection)){
         $current_page = $SETTINGS;
     } else {
         header('Location: dashboard.php?p=challenges');
@@ -76,7 +51,7 @@ include 'includes/comp_time.php';
         $comp_state = 'end';
     }
     // echo($comp_state);
-    if ($comp_state == 'going'){ 
+    if ($comp_state == 'going'){
         $sql = "select @a:=@a+1 as rank, u.id as user_id, (select ts from scoreboard where user_id=sb.user_id order by ts DESC LIMIT 1) as ti, u.name as name, u.status as status, count(sb.c_id) as solved, sum(ch.score) as sscore from (SELECT @a:= 0) AS a, users as u, challenges as ch, scoreboard as sb where sb.c_id = ch.id and sb.user_id = u.id group by sb.user_id order by sscore desc, rank asc;";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
         $count = mysqli_num_rows($result);
@@ -92,7 +67,7 @@ include 'includes/comp_time.php';
             if ( $row['user_id'] == $login_user_id ){
                 $user_score = $row['sscore'] ;
                 $user_solve = $row['solved'];
-                break;            
+                break;
             }
             else{
                 $i=$i+1;
@@ -139,7 +114,7 @@ include 'includes/comp_time.php';
                 <p>Rank</p>
             </div>
         </div>
-        <?php 
+        <?php
             if ($comp_state == 'going'){
                 echo'<p class="nav-username" style="margin-top: 15px; font-size: 14px;">Time Remaning<br><span id="hours">!</span><span id="mins">!</span><span id="secs">!</span></p>';
             }
@@ -153,29 +128,35 @@ include 'includes/comp_time.php';
         <div class="dash-nav">
             <div class="tabs">
                 <ul>
-                    <?php 
+                    <?php
                         if ($current_page == $CHALLENGES) {
                             echo "<li><a href='dashboard.php?p=challenges' class='active'>Challenges</a></li>";
                             echo "<li><a href='dashboard.php?p=leaderboard'>Leaderboard</a></li>";
-                            echo "<li><a href='dashboard.php?p=settings'>Settings</a></li>";
+                            if (!$ldap_connection){
+                                echo "<li><a href='dashboard.php?p=settings'>Settings</a></li>";
+                            }
                         } else if($current_page == $LEADERBOARD) {
                             echo "<li><a href='dashboard.php?p=challenges'>Challenges</a></li>";
                             echo "<li><a href='dashboard.php?p=leaderboard'  class='active'>Leaderboard</a></li>";
-                            echo "<li><a href='dashboard.php?p=settings'>Settings</a></li>";
+                            if (!$ldap_connection){
+                                echo "<li><a href='dashboard.php?p=settings'>Settings</a></li>";
+                            }
                         } else if($current_page == $SETTINGS) {
                             echo "<li><a href='dashboard.php?p=challenges'>Challenges</a></li>";
                             echo "<li><a href='dashboard.php?p=leaderboard'>Leaderboard</a></li>";
-                            echo "<li><a href='dashboard.php?p=settings'  class='active'>Settings</a></li>";
-                        }  
+                            if (!$ldap_connection){
+                                echo "<li><a href='dashboard.php?p=settings' class='active'>Settings</a></li>";
+                            }
+                        }
                     ?>
                 </ul>
             </div>
             <a href="logout.php" class="logout">Logout</a>
         </div>
         <div class="dash-challenge-container">
-            <?php 
+            <?php
                 if ($current_page == $CHALLENGES) {
-                    if ($comp_state == 'going'){ 
+                    if ($comp_state == 'going'){
                         include 'includes/challenges.php';
                     }
                     else{
@@ -183,13 +164,13 @@ include 'includes/comp_time.php';
                     }
                 } else if ($current_page == $LEADERBOARD){
                     include 'includes/leaderboard.php';
-                } else if ($current_page == $SETTINGS) {
+                } else if ($current_page == $SETTINGS && !$ldap_connection) {
                     include 'includes/settings.php';
                 }
             ?>
         </div>
     </div>
-    
+
 </div>
 
 <div class="toast" id="toast">
@@ -214,8 +195,8 @@ include 'includes/comp_time.php';
             // /* creating image assuming data is the url of image */
             // var img = $('<img id="image_id">');
             // img.attr('src', data);
-            // img.appendTo('#id_of_element_where_you_want_to_add_image'); 
-        } 
+            // img.appendTo('#id_of_element_where_you_want_to_add_image');
+        }
 });
 </script>
 
@@ -254,9 +235,9 @@ setInterval("yourAjaxCall()",10000);
 function yourAjaxCall(){
     $.ajax({    //create an ajax request to display.php
         type: "GET",
-        url: "get_user_state.php",             
-        dataType: "html",   //expect html to be returned                
-        success: function(response){  
+        url: "get_user_state.php",
+        dataType: "html",   //expect html to be returned
+        success: function(response){
             // $("#responsecontainer").html(response);
             text = response;
             string = text.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, "")
@@ -274,7 +255,7 @@ function yourAjaxCall(){
                 alert('You are banned from the CTF. Please contact ADMIN');
                 window.location.replace("/logout.php");
                 $(document).ajaxStop();
-            }              
+            }
         }
     });
 }
@@ -287,9 +268,9 @@ window.onload = function() {
 </script>
 
 
-<?php 
+<?php
 // if ($current_page == $CHALLENGES) {
-    if ($comp_state == 'going'){ 
+    if ($comp_state == 'going'){
         echo '<script src="/js/timer.js"></script>';
     }
 // }
