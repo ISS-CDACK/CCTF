@@ -102,7 +102,7 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
+-- Default password Ctf@1234
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `status`, `special_key`, `creation_ts`) VALUES
 (1, 'Admin Test', 'admin@mail.com', '$2y$10$UHL83.qQOqYXaj2.YE6VyONdrRra6iaj5l4NN5rSeqD1NWbsBYJ46', 'admin', 'true', NULL, '2022-09-20 09:55:35'),
 (2, 'User', 'user@mail.com', '$2y$10$UHL83.qQOqYXaj2.YE6VyONdrRra6iaj5l4NN5rSeqD1NWbsBYJ46', 'user', 'true', NULL, '2022-09-20 10:15:35');
